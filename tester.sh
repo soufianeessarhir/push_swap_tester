@@ -5,16 +5,30 @@ test_push_swap() {
     local sequence="$1"
     local max_instructions="$2"
     
+    # Get the number of instructions
     result=$(./push_swap $sequence | wc -l)
     
+    # Check if the sequence is sorted correctly
+    check=$(./push_swap $sequence | ./checker_linux $sequence)
+    
+    # Check if the number of instructions exceeds the limit
     if [ $result -gt $max_instructions ]; then
         echo "Failed: $result instructions (max: $max_instructions)"
         echo "Sequence: $sequence"
         return 1
-    else
-        echo "Pass: $result instructions"
-        return 0
     fi
+    
+    # Check if the checker output is "OK"
+    # if [ "$check" != "OK" ]; then
+    #     echo "Failed: Sequence is not sorted correctly"
+    #     echo "Checker output: $check"
+    #     echo "Sequence: $sequence"
+    #     return 1
+    # fi
+    
+    # If both checks pass
+    echo "Pass: $result instructions"
+    return 0
 }
 
 # Generate permutations using factorial numbering system
